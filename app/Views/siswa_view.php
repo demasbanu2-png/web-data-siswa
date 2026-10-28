@@ -189,7 +189,18 @@
                         </div>
                         <div class="mb-3">
                             <label for="kelas" class="form-label">Kelas</label>
-                            <input type="text" name="kelas" id="kelas" class="form-control" placeholder="Contoh: XI RPL 1" required>
+                            <select name="kelas" id="kelas" class="form-select" required>
+                                <option value="" disabled selected>-- Pilih Kelas --</option>
+                                <option value="10 ANIMASI">10 ANIMASI</option>
+                                <option value="10 BC">10 BC</option>
+                                <option value="10 RPL">10 RPL</option>
+                                <option value="11 ANIMASI">11 ANIMASI</option>
+                                <option value="11 BC">11 BC</option>
+                                <option value="11 RPL">11 RPL</option>
+                                <option value="12 ANIMASI">12 ANIMASI</option>
+                                <option value="12 BC">12 BC</option>
+                                <option value="12 RPL">12 RPL</option>
+                            </select>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -203,6 +214,13 @@
 
     <!-- Modal Edit Siswa (Dark Mode) -->
     <?php if (!empty($siswa) && is_array($siswa)) : ?>
+        <?php 
+        $listOpsiKelas = [
+            '10 ANIMASI', '10 BC', '10 RPL',
+            '11 ANIMASI', '11 BC', '11 RPL',
+            '12 ANIMASI', '12 BC', '12 RPL'
+        ];
+        ?>
         <?php foreach ($siswa as $row) : ?>
             <div class="modal fade" id="modalEdit<?= $row['id']; ?>" tabindex="-1" 
                 aria-labelledby="modalEditLabel<?= $row['id']; ?>" aria-hidden="true">
@@ -229,8 +247,19 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Kelas</label>
-                                    <input type="text" name="kelas" class="form-control" 
-                                        value="<?= esc($row['kelas']); ?>" required>
+                                    <select name="kelas" class="form-select" required>
+                                        <?php 
+                                        $currentKelas = $row['kelas'];
+                                        // Jika kelas siswa saat ini belum ada di list standar, tetap sertakan agar data aman
+                                        if (!empty($currentKelas) && !in_array($currentKelas, $listOpsiKelas)) {
+                                            echo '<option value="' . esc($currentKelas) . '" selected>' . esc($currentKelas) . ' (Saat Ini)</option>';
+                                        }
+                                        foreach ($listOpsiKelas as $optKls) {
+                                            $isSelected = (strtoupper(trim($currentKelas)) === strtoupper(trim($optKls))) ? 'selected' : '';
+                                            echo '<option value="' . esc($optKls) . '" ' . $isSelected . '>' . esc($optKls) . '</option>';
+                                        }
+                                        ?>
+                                    </select>
                                 </div>
                             </div>
                             <div class="modal-footer">
